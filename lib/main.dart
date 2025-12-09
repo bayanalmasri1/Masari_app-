@@ -54,8 +54,6 @@ class MasariApp extends StatelessWidget {
         return MaterialPageRoute(builder: (_) => MentorChatScreen());
       case Routes.community:
         return MaterialPageRoute(builder: (_) => CommunityScreen());
-
-      // auth routes
       case Routes.login:
         return MaterialPageRoute(builder: (_) => LoginScreen());
       case Routes.register:

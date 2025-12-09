@@ -15,7 +15,7 @@ class OpportunitiesScreen extends StatelessWidget {
       id: 'op$i',
       title: 'تدريب صيفي ${i + 1}',
       company: 'شركة مثال ${i + 1}',
-      location: i % 2 == 0 ? 'الرياض' : 'جدة',
+      location: i % 2 == 0 ? 'الرياض' : 'القصيم',
       description: 'وصف تفصيلي للفرصة رقم ${i + 1}.',
     ),
   );
@@ -27,7 +27,7 @@ class OpportunitiesScreen extends StatelessWidget {
       id: 'o$i',
       title: 'فرصة رقم ${i + 1}',
       company: 'شركة ${i + 1}',
-      location: i % 2 == 0 ? 'جدة' : 'الرياض',
+      location: i % 2 == 0 ? 'القصيم' : 'الرياض',
       description: 'وصف الفرصة ${i + 1}',
     ),
   );

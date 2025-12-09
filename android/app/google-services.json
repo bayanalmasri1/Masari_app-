@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "885423978672",
+    "project_id": "masariweb",
+    "storage_bucket": "masariweb.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:885423978672:android:9ce87c2630850278aca375",
+        "android_client_info": {
+          "package_name": "com.example.masari_masari"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCsFdztzneAdSMq9aEzwy0seWfaa8fSuy4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

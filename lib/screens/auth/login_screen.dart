@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:masari_masari/screens/home/home_screen.dart';
 import 'rigester_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -30,8 +32,8 @@ class _LoginScreenState extends State<LoginScreen>
       duration: Duration(milliseconds: 600),
     );
 
-    fadeAnim =
-        Tween<double>(begin: 0, end: 1).animate(CurvedAnimation(parent: animCtrl, curve: Curves.easeOut));
+    fadeAnim = Tween<double>(begin: 0, end: 1)
+        .animate(CurvedAnimation(parent: animCtrl, curve: Curves.easeOut));
 
     slideAnim = Tween<Offset>(
       begin: Offset(0, .2),
@@ -41,22 +43,56 @@ class _LoginScreenState extends State<LoginScreen>
     animCtrl.forward();
   }
 
+  Future<void> login() async {
+    setState(() => loading = true);
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: emailCtrl.text.trim(),
+        password: passCtrl.text.trim(),
+      );
+
+      // الانتقال إلى الهوم ومنع العودة
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => HomeScreen()),
+      );
+    } on FirebaseAuthException catch (e) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(e.message ?? "حدث خطأ")));
+    } finally {
+      setState(() => loading = false);
+    }
+  }
+
+  Future<void> guestLogin() async {
+    setState(() => loading = true);
+    try {
+      await FirebaseAuth.instance.signInAnonymously();
+
+      // الانتقال إلى الهوم ومنع العودة
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => HomeScreen()),
+      );
+    } on FirebaseAuthException catch (e) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(e.message ?? "حدث خطأ")));
+    } finally {
+      setState(() => loading = false);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        /// ------------------- BACKGROUND GRADIENT -------------------
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [
-              Color.fromARGB(255, 255, 255, 255),
-              Color(0xFF009A8A),
-            ],
+            colors: [Colors.white, Color(0xFF009A8A)],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),
         ),
-
         child: Center(
           child: SingleChildScrollView(
             padding: EdgeInsets.symmetric(horizontal: 20),
@@ -66,16 +102,11 @@ class _LoginScreenState extends State<LoginScreen>
                 position: slideAnim,
                 child: Column(
                   children: [
-                    /// ------------------- BIG LOGO -------------------
                     Image.asset(
                       "assets/images/logo.png",
                       width: 300,
                       height: 260,
                     ),
-
-                
-
-                    /// ------------------- WHITE CARD -------------------
                     Container(
                       width: 350,
                       padding: EdgeInsets.all(25),
@@ -84,28 +115,24 @@ class _LoginScreenState extends State<LoginScreen>
                         borderRadius: BorderRadius.circular(22),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black26,
-                            blurRadius: 12,
-                            offset: Offset(0, 4),
-                          )
+                              color: Colors.black26,
+                              blurRadius: 12,
+                              offset: Offset(0, 4))
                         ],
                       ),
-
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Text(
                             "تسجيل الدخول",
                             style: TextStyle(
-                              fontSize: 22,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black87,
-                            ),
+                                fontSize: 22,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black87),
                           ),
-
                           SizedBox(height: 25),
 
-                          /// ------------------- EMAIL FIELD -------------------
+                          /// EMAIL FIELD
                           AnimatedContainer(
                             duration: Duration(milliseconds: 250),
                             padding: EdgeInsets.symmetric(horizontal: 14),
@@ -119,10 +146,9 @@ class _LoginScreenState extends State<LoginScreen>
                               controller: emailCtrl,
                               focusNode: emailFocus,
                               style: TextStyle(
-                                color: emailFocus.hasFocus
-                                    ? Colors.white
-                                    : Colors.black87,
-                              ),
+                                  color: emailFocus.hasFocus
+                                      ? Colors.white
+                                      : Colors.black87),
                               decoration: InputDecoration(
                                 labelText: "البريد الإلكتروني",
                                 labelStyle: TextStyle(
@@ -141,10 +167,9 @@ class _LoginScreenState extends State<LoginScreen>
                               onTap: () => setState(() {}),
                             ),
                           ),
-
                           SizedBox(height: 20),
 
-                          /// ------------------- PASSWORD FIELD -------------------
+                          /// PASSWORD FIELD
                           AnimatedContainer(
                             duration: Duration(milliseconds: 250),
                             padding: EdgeInsets.symmetric(horizontal: 14),
@@ -159,10 +184,9 @@ class _LoginScreenState extends State<LoginScreen>
                               focusNode: passFocus,
                               obscureText: obscure,
                               style: TextStyle(
-                                color: passFocus.hasFocus
-                                    ? Colors.white
-                                    : Colors.black87,
-                              ),
+                                  color: passFocus.hasFocus
+                                      ? Colors.white
+                                      : Colors.black87),
                               decoration: InputDecoration(
                                 labelText: "كلمة المرور",
                                 labelStyle: TextStyle(
@@ -193,30 +217,44 @@ class _LoginScreenState extends State<LoginScreen>
                               onTap: () => setState(() {}),
                             ),
                           ),
-
                           SizedBox(height: 25),
 
-                          /// ------------------- LOGIN BUTTON -------------------
+                          /// LOGIN BUTTON
                           ElevatedButton(
-                            onPressed: () {},
+                            onPressed: loading ? null : login,
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Color(0xFF006A60),
                               padding: EdgeInsets.symmetric(
                                   vertical: 14, horizontal: 50),
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(14),
-                              ),
+                                  borderRadius: BorderRadius.circular(14)),
                             ),
+                            child: loading
+                                ? CircularProgressIndicator(
+                                    color: Colors.white,
+                                  )
+                                : Text(
+                                    "دخول",
+                                    style: TextStyle(
+                                        fontSize: 18, color: Colors.white),
+                                  ),
+                          ),
+
+                          SizedBox(height: 10),
+
+                          /// GUEST LOGIN BUTTON
+                          TextButton(
+                            onPressed: loading ? null : guestLogin,
                             child: Text(
-                              "دخول",
+                              "الدخول كزائر",
                               style: TextStyle(
-                                  fontSize: 18, color: Colors.white),
+                                  color: Color(0xFF006A60), fontSize: 16),
                             ),
                           ),
 
                           SizedBox(height: 20),
 
-                          /// ------------------- SOCIAL ICONS -------------------
+                          /// SOCIAL ICONS
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -243,9 +281,7 @@ class _LoginScreenState extends State<LoginScreen>
                             child: Text(
                               "إنشاء حساب جديد",
                               style: TextStyle(
-                                color: Color(0xFF006A60),
-                                fontSize: 16,
-                              ),
+                                  color: Color(0xFF006A60), fontSize: 16),
                             ),
                           ),
                         ],

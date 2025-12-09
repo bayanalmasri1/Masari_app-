@@ -12,7 +12,7 @@ class _FilterScreenState extends State<FilterScreen> {
   String? selectedCity;
   String? selectedType;
 
-  final cities = ['الرياض', 'جدة', 'الدمام'];
+  final cities = ['الرياض', 'القصيم', 'الدمام'];
   final types = ['تدريب', 'دوام جزئي', 'دوام كامل'];
 
   @override

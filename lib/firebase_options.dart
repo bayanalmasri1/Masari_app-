@@ -5,7 +5,15 @@ import 'package:flutter/foundation.dart'
     show defaultTargetPlatform, kIsWeb, TargetPlatform;
 
 /// Default [FirebaseOptions] for use with your Firebase apps.
-
+///
+/// Example:
+/// ```dart
+/// import 'firebase_options.dart';
+/// // ...
+/// await Firebase.initializeApp(
+///   options: DefaultFirebaseOptions.currentPlatform,
+/// );
+/// ```
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
@@ -33,48 +41,46 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyCaAbdgFpZvyTkMNOu9EpgwGHWA-S0jT94',
-    appId: '1:912489347164:web:91b7a5102465c729020e99',
-    messagingSenderId: '912489347164',
-    projectId: 'masari-81a47',
-    authDomain: 'masari-81a47.firebaseapp.com',
-    storageBucket: 'masari-81a47.firebasestorage.app',
-    measurementId: 'G-Y5YJGGXP9R',
+    apiKey: 'AIzaSyBzlDBkf7szFMDP9RoGOjwhKEUCKYmwDlQ',
+    appId: '1:885423978672:web:3daf9831c55aae00aca375',
+    messagingSenderId: '885423978672',
+    projectId: 'masariweb',
+    authDomain: 'masariweb.firebaseapp.com',
+    storageBucket: 'masariweb.firebasestorage.app',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyAy0gK28zQ768H-eGz3GkuD5hq1rk4sOt8',
-    appId: '1:912489347164:android:62a7c7b2d6d56643020e99',
-    messagingSenderId: '912489347164',
-    projectId: 'masari-81a47',
-    storageBucket: 'masari-81a47.firebasestorage.app',
+    apiKey: 'AIzaSyCsFdztzneAdSMq9aEzwy0seWfaa8fSuy4',
+    appId: '1:885423978672:android:9ce87c2630850278aca375',
+    messagingSenderId: '885423978672',
+    projectId: 'masariweb',
+    storageBucket: 'masariweb.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyCS0I1yNt_iSNGlPI-yXbGhioZl6fWmH5o',
-    appId: '1:912489347164:ios:9dbf0ed675343f16020e99',
-    messagingSenderId: '912489347164',
-    projectId: 'masari-81a47',
-    storageBucket: 'masari-81a47.firebasestorage.app',
-    iosBundleId: 'com.example.masari',
+    apiKey: 'AIzaSyAHVIbd5GDo7VV3rIsM2OGPCyNmkq19Bqw',
+    appId: '1:885423978672:ios:db6eb5083d16c2eaaca375',
+    messagingSenderId: '885423978672',
+    projectId: 'masariweb',
+    storageBucket: 'masariweb.firebasestorage.app',
+    iosBundleId: 'com.example.masariMasari',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyCS0I1yNt_iSNGlPI-yXbGhioZl6fWmH5o',
-    appId: '1:912489347164:ios:9dbf0ed675343f16020e99',
-    messagingSenderId: '912489347164',
-    projectId: 'masari-81a47',
-    storageBucket: 'masari-81a47.firebasestorage.app',
-    iosBundleId: 'com.example.masari',
+    apiKey: 'AIzaSyAHVIbd5GDo7VV3rIsM2OGPCyNmkq19Bqw',
+    appId: '1:885423978672:ios:db6eb5083d16c2eaaca375',
+    messagingSenderId: '885423978672',
+    projectId: 'masariweb',
+    storageBucket: 'masariweb.firebasestorage.app',
+    iosBundleId: 'com.example.masariMasari',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyCaAbdgFpZvyTkMNOu9EpgwGHWA-S0jT94',
-    appId: '1:912489347164:web:a85535ec90fc7545020e99',
-    messagingSenderId: '912489347164',
-    projectId: 'masari-81a47',
-    authDomain: 'masari-81a47.firebaseapp.com',
-    storageBucket: 'masari-81a47.firebasestorage.app',
-    measurementId: 'G-87WG56PS5D',
+    apiKey: 'AIzaSyBzlDBkf7szFMDP9RoGOjwhKEUCKYmwDlQ',
+    appId: '1:885423978672:web:3daf9831c55aae00aca375',
+    messagingSenderId: '885423978672',
+    projectId: 'masariweb',
+    authDomain: 'masariweb.firebaseapp.com',
+    storageBucket: 'masariweb.firebasestorage.app',
   );
 }

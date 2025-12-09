@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:masari_masari/screens/home/home_screen.dart';
 import '../../app_colors.dart';
 import 'login_screen.dart';
 
@@ -23,20 +24,31 @@ class _RegisterScreenState extends State<RegisterScreen>
   FocusNode passNode = FocusNode();
 
   @override
-  void initState() {
-    super.initState();
+  void dispose() {
+    email.dispose();
+    password.dispose();
+    name.dispose();
+    super.dispose();
   }
 
   Future register() async {
+    if (name.text.isEmpty || email.text.isEmpty || password.text.isEmpty) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("الرجاء ملء جميع الحقول")));
+      return;
+    }
+
     try {
       setState(() => loading = true);
 
+      // إنشاء الحساب في Firebase Auth
       UserCredential userCred =
           await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: email.text.trim(),
         password: password.text.trim(),
       );
 
+      // حفظ البيانات في Firestore
       await FirebaseFirestore.instance
           .collection("users")
           .doc(userCred.user!.uid)
@@ -46,12 +58,26 @@ class _RegisterScreenState extends State<RegisterScreen>
         "created_at": DateTime.now(),
       });
 
-      Navigator.pop(context);
+      // الانتقال إلى الهوم ومنع العودة
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => HomeScreen()),
+      );
+    } on FirebaseAuthException catch (e) {
+      String message = "حدث خطأ";
+      if (e.code == 'email-already-in-use') {
+        message = "هذا البريد مستخدم بالفعل";
+      } else if (e.code == 'weak-password') {
+        message = "كلمة المرور ضعيفة جداً";
+      }
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(message)));
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("خطأ: $e")));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("خطأ: $e")));
+    } finally {
+      setState(() => loading = false);
     }
-    setState(() => loading = false);
   }
 
   InputDecoration animatedDecoration(String label, FocusNode node) {
@@ -84,10 +110,7 @@ class _RegisterScreenState extends State<RegisterScreen>
         width: double.infinity,
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [
-              const Color.fromARGB(255, 255, 255, 255),
-              AppColors.teal,
-            ],
+            colors: [Colors.white, AppColors.teal],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -95,25 +118,21 @@ class _RegisterScreenState extends State<RegisterScreen>
         child: Center(
           child: SingleChildScrollView(
             child: Container(
-              width: 300, // تصغير عرض البطاقة
+              width: 300,
               padding: EdgeInsets.all(20),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(20),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black12,
-                    blurRadius: 12,
-                    offset: Offset(0, 4),
-                  )
+                      color: Colors.black12, blurRadius: 12, offset: Offset(0, 4))
                 ],
               ),
               child: Column(
                 children: [
-                  // LOGO
                   SizedBox(height: 10),
                   Icon(Icons.person_add_alt_1,
-                      size: 70, color: AppColors.teal), // تصغير الشعار قليلاً
+                      size: 70, color: AppColors.teal),
                   SizedBox(height: 15),
 
                   // FULL NAME
@@ -123,8 +142,7 @@ class _RegisterScreenState extends State<RegisterScreen>
                       child: TextField(
                         controller: name,
                         focusNode: nameNode,
-                        decoration:
-                            animatedDecoration("الاسم الكامل", nameNode),
+                        decoration: animatedDecoration("الاسم الكامل", nameNode),
                       ),
                     ),
                   ),
@@ -153,19 +171,15 @@ class _RegisterScreenState extends State<RegisterScreen>
                         focusNode: passNode,
                         obscureText: !showPassword,
                         style: TextStyle(
-                            color: passNode.hasFocus
-                                ? Colors.white
-                                : Colors.black87),
-                        decoration: animatedDecoration(
-                                "كلمة المرور", passNode)
+                            color: passNode.hasFocus ? Colors.white : Colors.black87),
+                        decoration: animatedDecoration("كلمة المرور", passNode)
                             .copyWith(
                           suffixIcon: IconButton(
                             icon: Icon(
                               showPassword
                                   ? Icons.visibility
                                   : Icons.visibility_off,
-                              color:
-                                  passNode.hasFocus ? Colors.white : Colors.grey,
+                              color: passNode.hasFocus ? Colors.white : Colors.grey,
                             ),
                             onPressed: () {
                               setState(() {
@@ -201,7 +215,6 @@ class _RegisterScreenState extends State<RegisterScreen>
                   Text("أو سجل بواسطة", style: TextStyle(color: Colors.grey)),
                   SizedBox(height: 12),
 
-                  // SOCIAL ICONS
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
