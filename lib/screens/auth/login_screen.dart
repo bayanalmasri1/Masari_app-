@@ -51,7 +51,6 @@ class _LoginScreenState extends State<LoginScreen>
         password: passCtrl.text.trim(),
       );
 
-      // الانتقال إلى الهوم ومنع العودة
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (_) => HomeScreen()),
@@ -69,7 +68,6 @@ class _LoginScreenState extends State<LoginScreen>
     try {
       await FirebaseAuth.instance.signInAnonymously();
 
-      // الانتقال إلى الهوم ومنع العودة
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (_) => HomeScreen()),
@@ -254,17 +252,17 @@ class _LoginScreenState extends State<LoginScreen>
 
                           SizedBox(height: 20),
 
-                          /// SOCIAL ICONS
+                          /// SOCIAL IMAGES
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              socialIcon(Icons.facebook, Colors.blue),
+                              socialImage("assets/images/facebook.png"),
                               SizedBox(width: 10),
-                              socialIcon(Icons.camera_alt, Colors.purple),
+                              socialImage("assets/images/google.png"),
                               SizedBox(width: 10),
-                              socialIcon(Icons.g_mobiledata, Colors.red),
+                              socialImage("assets/images/Github.png"),
                               SizedBox(width: 10),
-                              socialIcon(Icons.work_outline, Colors.blueGrey),
+                              socialImage("assets/images/linkedin.png"),
                             ],
                           ),
 
@@ -297,15 +295,22 @@ class _LoginScreenState extends State<LoginScreen>
     );
   }
 
-  Widget socialIcon(IconData icon, Color color) {
+  /// دالة عرض صورة داخل دائرة
+  Widget socialImage(String path) {
     return Container(
       padding: EdgeInsets.all(10),
       decoration: BoxDecoration(
         color: Colors.white,
         shape: BoxShape.circle,
-        boxShadow: [BoxShadow(color: Colors.black26, blurRadius: 4)],
+        boxShadow: [
+          BoxShadow(color: Colors.black26, blurRadius: 4),
+        ],
       ),
-      child: Icon(icon, color: color, size: 28),
+      child: Image.asset(
+        path,
+        width: 28,
+        height: 28,
+      ),
     );
   }
 }

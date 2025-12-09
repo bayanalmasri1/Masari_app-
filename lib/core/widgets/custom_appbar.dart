@@ -12,19 +12,14 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    final user = FirebaseAuth.instance.currentUser;
-
     return AppBar(
       titleSpacing: 8,
+      backgroundColor: AppColors.deepNavy,
       title: Row(
         children: [
-          // أيقونة تمثل فكرة الموقع مع العنوان
           Icon(Icons.work_outline, size: 28, color: Colors.white),
           SizedBox(width: 8),
-          Text(
-            title,
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-          ),
+          Text(title, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
           Spacer(),
 
           // زر البحث
@@ -34,37 +29,71 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             icon: Icon(Icons.search),
           ),
 
-          // إذا المستخدم غير مسجل الدخول نعرض زر تسجيل الدخول وإنشاء حساب
-          if (user == null) ...[
-            TextButton(
-              onPressed: () => NavHelper.push(context, Routes.login),
-              child: Text('تسجيل الدخول', style: TextStyle(color: Colors.white)),
-            ),
-            SizedBox(width: 8),
-            TextButton(
-              onPressed: () => NavHelper.push(context, Routes.register),
-              child: Text('إنشاء حساب', style: TextStyle(color: Colors.white)),
-            ),
-          ] else
-            // إذا المستخدم مسجل الدخول، زر الملف الشخصي فقط
+          /// ------------------------------------------------------------
+          /// StreamBuilder لمراقبة حالة تسجيل الدخول بشكل مباشر
+          /// ------------------------------------------------------------
+          StreamBuilder<User?>(
+  stream: FirebaseAuth.instance.authStateChanges(),
+  builder: (context, snapshot) {
+    final user = snapshot.data;
+
+    // -------------------------------
+    // إذا لا يوجد مستخدم أو المستخدم زائر
+    // -------------------------------
+    if (user == null || user.isAnonymous) {
+      return Row(
+        children: [
+          TextButton(
+            onPressed: () => NavHelper.push(context, Routes.login),
+            child: Text('تسجيل الدخول', style: TextStyle(color: Colors.white)),
+          ),
+          SizedBox(width: 8),
+          TextButton(
+            onPressed: () => NavHelper.push(context, Routes.register),
+            child: Text('إنشاء حساب', style: TextStyle(color: Colors.white)),
+          ),
+
+          // لو تحب نظهر أيقونة الزائر أيضًا:
+          if (user != null && user.isAnonymous)
             Padding(
-              padding: const EdgeInsets.only(right: 8.0),
-              child: GestureDetector(
-                onTap: () => NavHelper.push(context, Routes.profile),
-                child: CircleAvatar(
-                  backgroundColor: AppColors.teal,
-                  child: Text(
-                    (user.displayName != null && user.displayName!.isNotEmpty)
-                        ? user.displayName![0]
-                        : user.email![0].toUpperCase(),
-                    style: TextStyle(color: Colors.white),
-                  ),
+              padding: const EdgeInsets.only(right: 8),
+              child: CircleAvatar(
+                backgroundColor: AppColors.teal,
+                child: Text(
+                  "ز",
+                  style: TextStyle(color: Colors.white),
                 ),
               ),
             ),
         ],
+      );
+    }
+
+    // -------------------------------
+    // مستخدم مسجل دخول بشكل طبيعي
+    // -------------------------------
+    return Padding(
+      padding: const EdgeInsets.only(right: 8),
+      child: GestureDetector(
+        onTap: () => NavHelper.push(context, Routes.profile),
+        child: CircleAvatar(
+          backgroundColor: AppColors.teal,
+          child: Text(
+            user.displayName?.isNotEmpty == true
+                ? user.displayName![0].toUpperCase()
+                : (user.email != null
+                    ? user.email![0].toUpperCase()
+                    : "?"),
+            style: TextStyle(color: Colors.white),
+          ),
+        ),
       ),
-      backgroundColor: AppColors.deepNavy,
+    );
+  },
+)
+
+        ],
+      ),
     );
   }
 

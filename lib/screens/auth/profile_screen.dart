@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:masari_masari/app_colors.dart';
 import '../../routes.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -85,7 +86,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
         title: Text("الملف الشخصي"),
-        backgroundColor: Colors.deepPurple,
+        backgroundColor: AppColors.deepNavy,
       ),
       body: StreamBuilder(
         stream: FirebaseFirestore.instance.collection("users").doc(user!.uid).snapshots(),
@@ -126,7 +127,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           onTap: _uploadImage,
                           child: CircleAvatar(
                             radius: 20,
-                            backgroundColor: Colors.deepPurple,
+                            backgroundColor: AppColors.tealDark,
                             child: Icon(Icons.camera_alt, color: Colors.white),
                           ),
                         ),
@@ -147,7 +148,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       children: [
                         Row(
                           children: [
-                            Icon(Icons.person, color: Colors.deepPurple),
+                            Icon(Icons.person, color: AppColors.deepNavy),
                             SizedBox(width: 10),
                             Text("الاسم:", style: TextStyle(fontSize: 18)),
                             Spacer(),
@@ -157,7 +158,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         Divider(),
                         Row(
                           children: [
-                            Icon(Icons.email, color: Colors.deepPurple),
+                            Icon(Icons.email, color:AppColors.deepNavy ),
                             SizedBox(width: 10),
                             Text("البريد:", style: TextStyle(fontSize: 18)),
                             Spacer(),
@@ -175,7 +176,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ElevatedButton.icon(
                   onPressed: () => _editProfile(data),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
+                    backgroundColor: AppColors.tealDark,
                     minimumSize: Size(double.infinity, 50),
                   ),
                   icon: Icon(Icons.edit),
@@ -188,7 +189,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ElevatedButton.icon(
                   onPressed: () => Navigator.pushNamed(context, Routes.cvBuilder),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green,
+                    backgroundColor: AppColors.teal,
                     minimumSize: Size(double.infinity, 50),
                   ),
                   icon: Icon(Icons.assignment),
@@ -201,7 +202,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ElevatedButton.icon(
                   onPressed: () => FirebaseAuth.instance.signOut(),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red,
+                    backgroundColor: const Color.fromARGB(255, 171, 6, 6),
                     minimumSize: Size(double.infinity, 50),
                   ),
                   icon: Icon(Icons.logout),
