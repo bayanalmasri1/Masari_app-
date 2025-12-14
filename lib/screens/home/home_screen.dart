@@ -38,10 +38,7 @@ class HomeScreen extends StatelessWidget {
               if (i == 4) NavigationHelper.pushToExperts(context);
             },
             labelType: NavigationRailLabelType.all,
-            leading: Padding(
-              padding: const EdgeInsets.only(top: 8.0),
-              child: CircleAvatar(radius: 26, backgroundColor: AppColors.teal, child: Text('ب', style: TextStyle(color: Colors.white))),
-            ),
+           
             destinations: [
               NavigationRailDestination(icon: Icon(Icons.home_outlined), selectedIcon: Icon(Icons.home), label: Text('الرئيسية')),
               NavigationRailDestination(icon: Icon(Icons.work_outline), selectedIcon: Icon(Icons.work), label: Text('الفرص')),

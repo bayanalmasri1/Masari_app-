@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:masari_masari/screens/auth/auth_widgets/auth_text_field.dart';
+import 'package:masari_masari/screens/auth/auth_widgets/social_login_icon.dart';
 import 'package:masari_masari/screens/home/home_screen.dart';
 import '../../app_colors.dart';
 import 'login_screen.dart';
@@ -33,8 +35,9 @@ class _RegisterScreenState extends State<RegisterScreen>
 
   Future register() async {
     if (name.text.isEmpty || email.text.isEmpty || password.text.isEmpty) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text("الرجاء ملء جميع الحقول")));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("الرجاء ملء جميع الحقول")));
       return;
     }
 
@@ -42,21 +45,21 @@ class _RegisterScreenState extends State<RegisterScreen>
       setState(() => loading = true);
 
       // إنشاء الحساب في Firebase Auth
-      UserCredential userCred =
-          await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: email.text.trim(),
-        password: password.text.trim(),
-      );
+      UserCredential userCred = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(
+            email: email.text.trim(),
+            password: password.text.trim(),
+          );
 
       // حفظ البيانات في Firestore
       await FirebaseFirestore.instance
           .collection("users")
           .doc(userCred.user!.uid)
           .set({
-        "name": name.text.trim(),
-        "email": email.text.trim(),
-        "created_at": DateTime.now(),
-      });
+            "name": name.text.trim(),
+            "email": email.text.trim(),
+            "created_at": DateTime.now(),
+          });
 
       // الانتقال إلى الهوم ومنع العودة
       Navigator.pushReplacement(
@@ -70,11 +73,13 @@ class _RegisterScreenState extends State<RegisterScreen>
       } else if (e.code == 'weak-password') {
         message = "كلمة المرور ضعيفة جداً";
       }
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(message)));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(message)));
     } catch (e) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text("خطأ: $e")));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("خطأ: $e")));
     } finally {
       setState(() => loading = false);
     }
@@ -125,71 +130,52 @@ class _RegisterScreenState extends State<RegisterScreen>
                 borderRadius: BorderRadius.circular(20),
                 boxShadow: [
                   BoxShadow(
-                      color: Colors.black12, blurRadius: 12, offset: Offset(0, 4))
+                    color: Colors.black12,
+                    blurRadius: 12,
+                    offset: Offset(0, 4),
+                  ),
                 ],
               ),
               child: Column(
                 children: [
                   SizedBox(height: 10),
-                  Icon(Icons.person_add_alt_1,
-                      size: 70, color: AppColors.teal),
+                  Icon(Icons.person_add_alt_1, size: 70, color: AppColors.teal),
                   SizedBox(height: 15),
-
-                  // FULL NAME
-                  FocusScope(
-                    child: Focus(
-                      onFocusChange: (_) => setState(() {}),
-                      child: TextField(
-                        controller: name,
-                        focusNode: nameNode,
-                        decoration: animatedDecoration("الاسم الكامل", nameNode),
-                      ),
-                    ),
+                  AuthTextField(
+                    controller: name,
+                    focusNode: nameNode,
+                    label: "الاسم الكامل",
+                    icon: Icons.person_outline,
+                    onTap: () => setState(() {}),
                   ),
+
                   SizedBox(height: 14),
 
-                  // EMAIL
-                  FocusScope(
-                    child: Focus(
-                      onFocusChange: (_) => setState(() {}),
-                      child: TextField(
-                        controller: email,
-                        focusNode: emailNode,
-                        decoration:
-                            animatedDecoration("البريد الإلكتروني", emailNode),
-                      ),
-                    ),
+                  AuthTextField(
+                    controller: email,
+                    focusNode: emailNode,
+                    label: "البريد الإلكتروني",
+                    icon: Icons.email_outlined,
+                    onTap: () => setState(() {}),
                   ),
+
                   SizedBox(height: 14),
 
-                  // PASSWORD
-                  FocusScope(
-                    child: Focus(
-                      onFocusChange: (_) => setState(() {}),
-                      child: TextField(
-                        controller: password,
-                        focusNode: passNode,
-                        obscureText: !showPassword,
-                        style: TextStyle(
-                            color: passNode.hasFocus ? Colors.white : Colors.black87),
-                        decoration: animatedDecoration("كلمة المرور", passNode)
-                            .copyWith(
-                          suffixIcon: IconButton(
-                            icon: Icon(
-                              showPassword
-                                  ? Icons.visibility
-                                  : Icons.visibility_off,
-                              color: passNode.hasFocus ? Colors.white : Colors.grey,
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                showPassword = !showPassword;
-                              });
-                            },
-                          ),
-                        ),
+                  AuthTextField(
+                    controller: password,
+                    focusNode: passNode,
+                    label: "كلمة المرور",
+                    icon: Icons.lock_outline,
+                    obscure: !showPassword,
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        showPassword ? Icons.visibility : Icons.visibility_off,
+                        color: passNode.hasFocus ? Colors.white : Colors.grey,
                       ),
+                      onPressed: () =>
+                          setState(() => showPassword = !showPassword),
                     ),
+                    onTap: () => setState(() {}),
                   ),
 
                   SizedBox(height: 20),
@@ -216,14 +202,29 @@ class _RegisterScreenState extends State<RegisterScreen>
                   SizedBox(height: 12),
 
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      _socialIcon(Icons.facebook, Colors.blue),
-                      _socialIcon(Icons.g_mobiledata, Colors.red),
-                      _socialIcon(Icons.linked_camera, Colors.blueAccent),
-                      _socialIcon(Icons.camera, Colors.purple),
-                    ],
-                  ),
+  mainAxisAlignment: MainAxisAlignment.center,
+  children: [
+    SocialLoginIcon(
+      asset: "assets/images/google.png",
+      onTap: (){},
+    ),
+    SizedBox(width: 10),
+    SocialLoginIcon(
+      asset: "assets/images/facebook.png",
+      onTap: (){},
+    ),
+    SizedBox(width: 10),
+    SocialLoginIcon(
+      asset: "assets/images/Github.png",
+      onTap: (){},
+    ),
+    SizedBox(width: 10),
+    SocialLoginIcon(
+      asset: "assets/images/linkedin.png",
+      onTap: (){},
+    ),
+  ],
+),
 
                   SizedBox(height: 18),
 
@@ -235,7 +236,7 @@ class _RegisterScreenState extends State<RegisterScreen>
                       );
                     },
                     child: Text("لديك حساب؟ تسجيل الدخول"),
-                  )
+                  ),
                 ],
               ),
             ),
@@ -244,16 +245,4 @@ class _RegisterScreenState extends State<RegisterScreen>
       ),
     );
   }
-
-  Widget _socialIcon(IconData icon, Color color) {
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 8),
-      padding: EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: color.withOpacity(0.15),
-      ),
-      child: Icon(icon, color: color, size: 28),
-    );
-  }
-}
+    }
